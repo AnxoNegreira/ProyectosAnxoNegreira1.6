@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Proyecto con p5.js</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.4.0/p5.js"></script>
+</head>
+<body>
+  <script>
+    let peces = [];
+    let algas = [];
+    let burbujas = [];
+
+    function setup() {
+      createCanvas(800, 400);
+      
+      // Dibujar algas iniciales
+      for (let i = 0; i < 5; i++) {
+        algas.push({ x: random(50, width - 50), altura: random(100, 200) });
+      }
+      
+      // Dibujar burbujas iniciales
+      for (let i = 0; i < 10; i++) {
+        burbujas.push({ x: random(width), y: random(height), tam: random(10, 20) });
+      }
+    }
+
+    function draw() {
+      background(50, 150, 200); // Fondo azul para el agua
+
+      // Dibujar fondo (piedritas)
+      drawPiedritas();
+
+      // Dibujar algas
+      for (let alga of algas) {
+        drawAlga(alga.x, alga.altura);
+      }
+
+      // Dibujar peces
+      for (let pez of peces) {
+        drawFish(pez.x, pez.y, pez.longitud, pez.altura, pez.color, pez.tamCola, pez.tamOjo, pez.colorCola);
+      }
+
+      // Dibujar burbujas
+      for (let burbuja of burbujas) {
+        drawBurbuja(burbuja.x, burbuja.y, burbuja.tam);
+        burbuja.y -= 1; // Movimiento hacia arriba
+        if (burbuja.y < 0) {
+          burbuja.y = height; // Resetear posición
+        }
+      }
+    }
+
+    // Función para dibujar un pez
+    function drawFish(x, y, longitud, altura, colorPez, tamCola, tamOjo, colorCola) {
+      noStroke();
+
+      // Cola
+      fill(colorCola);
+      triangle(x - longitud / 2, y, x - longitud / 2 - tamCola, y - altura / 4, x - longitud / 2 - tamCola, y + altura / 4);
+
+      // Cuerpo
+      fill(colorPez);
+      ellipse(x, y, longitud, altura);
+
+      // Ojo
+      fill(255);
+      ellipse(x + longitud / 4, y - altura / 4, tamOjo);
+      fill(0);
+      ellipse(x + longitud / 4, y - altura / 4, tamOjo / 2);
+    }
+
+    // Función para dibujar algas
+    function drawAlga(x, altura) {
+      fill(0, 150, 0);
+      for (let i = 0; i < altura; i += 20) {
+        ellipse(x, height - i, 30, 40);
+      }
+    }
+
+    // Función para dibujar burbujas
+    function drawBurbuja(x, y, tam) {
+      noFill();
+      stroke(255, 200);
+      ellipse(x, y, tam);
+    }
+
+    // Función para dibujar piedritas
+    function drawPiedritas() {
+      for (let i = 0; i < width; i += 20) {
+        fill(150, 100, 50);
+        ellipse(i + random(-5, 5), height - 10, random(10, 20), random(5, 10));
+      }
+    }
+
+    // Agregar un pez al hacer clic
+    function mousePressed() {
+      peces.push({
+        x: mouseX,
+        y: mouseY,
+        longitud: random(50, 100),
+        altura: random(30, 50),
+        color: color(random(100, 255), random(100, 255), random(100, 255)),
+        tamCola: random(20, 40),
+        tamOjo: random(5, 10),
+        colorCola: color(random(100, 255), random(100, 255), random(100, 255))
+      });
+    }
+  </script>
+</body>
+</html>
